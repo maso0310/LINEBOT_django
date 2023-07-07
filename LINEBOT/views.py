@@ -47,6 +47,7 @@ def callback(request):
                         message.append(TextSendMessage(text='會員資料新增完畢'))
                     elif User_Info.objects.filter(uid=uid).exists()==True:
                         message.append(TextSendMessage(text='已經有建立會員資料囉'))
+                        message.append(TextSendMessage(text=f'你回傳的文字訊息是:\n{mtext}'))
                         user_info = User_Info.objects.filter(uid=uid)
                         for user in user_info:
                             info = 'UID=%s\nNAME=%s\n大頭貼=%s'%(user.uid,user.name,user.pic_url)
@@ -60,13 +61,15 @@ def callback(request):
                     print(os.getcwd())
                     print(__file__)
                     print(os.path.abspath(__file__))
-                    path='/GISlab/static/'+image_name
+                    BASEDIR = '/opt/render/project/src'
+                    path= BASEDIR + '/static/' + image_name
+
                     with open(path, 'wb') as fd:
                         for chunk in image_content.iter_content():
                             fd.write(chunk)
                     domain_name = 'https://linebot-dj.onrender.com'
                     message=[]
-                    message.append(ImageSendMessage(original_content_url=domain_name + path[2:],preview_image_url=domain_name + path[1:]))
+                    message.append(ImageSendMessage(original_content_url=domain_name + '/static/' + image_name,preview_image_url=domain_name + '/static/' + image_name))
                     line_bot_api.reply_message(event.reply_token,message)
 
         return HttpResponse()
