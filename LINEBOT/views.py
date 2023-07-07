@@ -9,6 +9,8 @@ from linebot import LineBotApi, WebhookParser
 from linebot.exceptions import InvalidSignatureError, LineBotApiError
 from linebot.models import MessageEvent, TextSendMessage
 
+import random, string
+
 # 啟動 LINE BOT API 的驗證
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 # 收到 webhook 的時候進行來源驗證
@@ -30,10 +32,20 @@ def callback(request):
 
         for event in events:
             if isinstance(event, MessageEvent):
-                mtext=event.message.text
-                message=[]
-                message.append(TextSendMessage(text=mtext))
-                line_bot_api.reply_message(event.reply_token,message)
+                if event.message.type=='text':
+                    mtext=event.message.text
+                    message=[]
+                    message.append(TextSendMessage(text=mtext))
+                    line_bot_api.reply_message(event.reply_token,message)
+
+                elif event.message.type=='image':
+                    image_name = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(4))
+                    image_content = line_bot_api.get_message_content(event.message.id)
+                    image_name = image_name.upper()+'.jpg'
+                    path='./static/'+image_name
+                    with open(path, 'wb') as fd:
+                        for chunk in image_content.iter_content():
+                            fd.write(chunk)
 
         return HttpResponse()
     else:
