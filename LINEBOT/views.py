@@ -61,13 +61,17 @@ def callback(request):
                     print(os.getcwd())
                     print(__file__)
                     print(os.path.abspath(__file__))
-                    BASEDIR = '/opt/render/project/src'
-                    path= BASEDIR + '/static/' + image_name
 
+                    BASEDIR = '/opt/render/project/src'
+                    path = BASEDIR + '/static/' + image_name
+                    if os.path.isdir('./static/')==False:
+                        os.mkdir('./static/')
+                    path = './static/' + image_name
                     with open(path, 'wb') as fd:
                         for chunk in image_content.iter_content():
                             fd.write(chunk)
                     domain_name = 'https://linebot-dj.onrender.com'
+
                     message=[]
                     message.append(ImageSendMessage(original_content_url=domain_name + '/static/' + image_name,preview_image_url=domain_name + '/static/' + image_name))
                     line_bot_api.reply_message(event.reply_token,message)
