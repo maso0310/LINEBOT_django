@@ -58,14 +58,6 @@ def callback(request):
                     image_name = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(4))
                     image_content = line_bot_api.get_message_content(event.message.id)
                     image_name = image_name.upper()+'.jpg'
-                    print(os.getcwd())
-                    print(__file__)
-                    print(os.path.abspath(__file__))
-                    print(glob.glob('./*'))
-                    BASEDIR = '/opt/render/project/src'
-                    path = BASEDIR + '/static/' + image_name
-                    if os.path.isdir('/opt/render/project/src/static')==False:
-                        os.mkdir('/opt/render/project/src/static')
                     if os.path.isdir('./static/')==False:
                         os.mkdir('./static/')
                     path = './static/' + image_name
@@ -75,7 +67,7 @@ def callback(request):
                     domain_name = 'https://linebot-dj.onrender.com'
 
                     message=[]
-                    message.append(ImageSendMessage(original_content_url=domain_name + '/static/' + image_name,preview_image_url=domain_name + '/static/' + image_name))
+                    message.append(ImageSendMessage(original_content_url=domain_name + path[1:],preview_image_url=domain_name + path[1:]))
                     line_bot_api.reply_message(event.reply_token,message)
 
         return HttpResponse()
