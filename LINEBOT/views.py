@@ -57,13 +57,13 @@ def callback(request):
                     image_name = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(4))
                     image_content = line_bot_api.get_message_content(event.message.id)
                     image_name = image_name.upper()+'.jpg'
-                    path='./static/'+image_name
+                    path='../static/'+image_name
                     with open(path, 'wb') as fd:
                         for chunk in image_content.iter_content():
                             fd.write(chunk)
                     domain_name = 'https://linebot-dj.onrender.com'
                     message=[]
-                    message.append(ImageSendMessage(original_content_url=domain_name + path[1:],preview_image_url=domain_name + path[1:]))
+                    message.append(ImageSendMessage(original_content_url=domain_name + path[2:],preview_image_url=domain_name + path[1:]))
                     line_bot_api.reply_message(event.reply_token,message)
 
         return HttpResponse()
