@@ -46,6 +46,10 @@ def callback(request):
                     with open(path, 'wb') as fd:
                         for chunk in image_content.iter_content():
                             fd.write(chunk)
+                    domain_name = 'https://linebot-dj.onrender.com'
+                    message=[]
+                    message.append(ImageSendMessage(original_content_url=domain_name + path[1:],preview_image_url=domain_name + path[1:]))
+                    line_bot_api.reply_message(event.reply_token,message)
 
         return HttpResponse()
     else:
