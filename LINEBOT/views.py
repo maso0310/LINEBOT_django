@@ -7,11 +7,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 from linebot import LineBotApi, WebhookParser
 from linebot.exceptions import InvalidSignatureError, LineBotApiError
-from linebot.models import MessageEvent, TextSendMessage
+from linebot.models import *
 
 from .models import *
 
-import random, string, os
+import random, string, os, glob
 
 # 啟動 LINE BOT API 的驗證
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
@@ -47,11 +47,11 @@ def callback(request):
                         message.append(TextSendMessage(text='會員資料新增完畢'))
                     elif User_Info.objects.filter(uid=uid).exists()==True:
                         message.append(TextSendMessage(text='已經有建立會員資料囉'))
-                        message.append(TextSendMessage(text=f'你回傳的文字訊息是:\n{mtext}'))
                         user_info = User_Info.objects.filter(uid=uid)
                         for user in user_info:
                             info = 'UID=%s\nNAME=%s\n大頭貼=%s'%(user.uid,user.name,user.pic_url)
                             message.append(TextSendMessage(text=info))
+                        message.append(TextSendMessage(text=f'你回傳的文字訊息是:\n{mtext}'))
                     line_bot_api.reply_message(event.reply_token,message)
 
                 elif event.message.type=='image':
@@ -61,9 +61,11 @@ def callback(request):
                     print(os.getcwd())
                     print(__file__)
                     print(os.path.abspath(__file__))
-
+                    print(glob.glob('./*'))
                     BASEDIR = '/opt/render/project/src'
                     path = BASEDIR + '/static/' + image_name
+                    if os.path.isdir('/opt/render/project/src/static')==False:
+                        os.mkdir('/opt/render/project/src/static')
                     if os.path.isdir('./static/')==False:
                         os.mkdir('./static/')
                     path = './static/' + image_name
