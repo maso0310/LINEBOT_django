@@ -67,6 +67,7 @@ def callback(request):
                     domain_name = 'https://linebot-dj.onrender.com'
 
                     message=[]
+                    print('傳送的圖片路徑', domain_name + path[1:])
                     message.append(ImageSendMessage(original_content_url=domain_name + path[1:],preview_image_url=domain_name + path[1:]))
                     line_bot_api.reply_message(event.reply_token,message)
 
