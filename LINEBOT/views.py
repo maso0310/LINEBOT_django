@@ -11,7 +11,7 @@ from linebot.models import MessageEvent, TextSendMessage
 
 from .models import *
 
-import random, string
+import random, string, os
 
 # 啟動 LINE BOT API 的驗證
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
@@ -57,7 +57,10 @@ def callback(request):
                     image_name = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(4))
                     image_content = line_bot_api.get_message_content(event.message.id)
                     image_name = image_name.upper()+'.jpg'
-                    path='../static/'+image_name
+                    print(os.getcwd())
+                    print(__file__)
+                    print(os.path.abspath(__file__))
+                    path='/GISlab/static/'+image_name
                     with open(path, 'wb') as fd:
                         for chunk in image_content.iter_content():
                             fd.write(chunk)
